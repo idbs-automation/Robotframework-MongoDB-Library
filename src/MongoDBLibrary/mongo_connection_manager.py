@@ -1,5 +1,6 @@
 import ConfigParser
 from robot.api import logger
+from pymongo import mongo_client
 
 class MongoConnectionManager(object):
     """
@@ -21,24 +22,12 @@ class MongoConnectionManager(object):
         | Connect To MongoDB | foo.bar.org | ${27017} |
         | # Or for an authenticated connection |
         | Connect To MongoDB | admin:admin@foo.bar.org | ${27017} |
-        
         """
-        dbapiModuleName = 'pymongo'
-        db_api_2 = __import__(dbapiModuleName);
-        
-        dbPort = int(dbPort)
-        #print "host is               [ %s ]" % dbHost
-        #print "port is               [ %s ]" % dbPort
-        #print "pool_size is          [ %s ]" % dbPoolSize
-        #print "timeout is            [ %s ]" % dbTimeout
-        #print "slave_okay is         [ %s ]" % dbSlaveOkay
-        #print "document_class is     [ %s ]" % dbDocClass
-        #print "tz_aware is           [ %s ]" % dbTZAware
-        print "| Connect To MondoDB | dbHost | dbPort | dbMaxPoolSize | dbNetworktimeout | dbDocClass | dbTZAware |"
-        print "| Connect To MondoDB | %s | %s | %s | %s | %s | %s |" % (dbHost,dbPort,dbMaxPoolSize,dbNetworkTimeout,dbDocClass,dbTZAware)
 
-        self._dbconnection = db_api_2.connection.Connection (host=dbHost, port=dbPort, max_pool_size=dbMaxPoolSize, network_timeout=dbNetworkTimeout, document_class=dbDocClass, tz_aware=dbTZAware);
-        
+        self._dbconnection = mongo_client.MongoClient(host=dbHost, port=int(dbPort), document_class=dbDocClass,
+                                                      tz_aware=dbTZAware, maxPoolSize=dbMaxPoolSize,
+                                                      socketTimeoutMS=dbNetworkTimeout)
+
     def disconnect_from_mongodb(self):
         """
         Disconnects from the MongoDB server.
@@ -46,6 +35,4 @@ class MongoConnectionManager(object):
         For example:
         | Disconnect From MongoDB | # disconnects from current connection to the MongoDB server | 
         """
-        print "| Disconnect From MongoDB |"
-        self._dbconnection.disconnect()
-        
+        self._dbconnection.close()

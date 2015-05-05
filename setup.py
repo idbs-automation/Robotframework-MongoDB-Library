@@ -18,7 +18,8 @@ def main():
           author_email = 'jerry@iplantcollaborative.org',
           url          = 'https://github.com/',
           package_dir  = { '' : 'src'},
-          packages     = ['MongoDBLibrary']
+          packages     = ['MongoDBLibrary'],
+          install_requires=['robotframework', 'pymongo>=3.0.0'],
           )
         
 
