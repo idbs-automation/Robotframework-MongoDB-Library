@@ -15,21 +15,14 @@ Connect-Disconnect
 
 Get MongoDB Databases
     [Tags]    regression
-    Comment
     Connect To MongoDB    ${MDBHost}    ${MDBPort}
     Comment    Retrieve a list of databases on the MongoDB server
     @{output} =    Get MongoDB Databases
     Log Many    @{output}
-    Comment    Verify the order in which the databases are returned by checking specific elements of return for exact db name
-    Should Contain    @{output}[0]    test
-    Should Contain    @{output}[1]    admin
-    Should Contain    @{output}[2]    local
     Comment    Verify that db name is contained in the list output
     Should Contain    ${output}    admin
     Should Contain    ${output}    local
     Should Contain    ${output}    test
-    Comment    Log as a list
-    Log    ${output}
     Comment    Disconnect from MongoDB Server
     Disconnect From MongoDB
 
@@ -227,8 +220,8 @@ Retrieve Mongodb Records With Desired Fields
     ${MDBDB} =    Set Variable    users
     ${MDBColl} =    Set Variable    account
     ${output} =    Save MongoDB Records    ${MDBDB}    ${MDBColl}    {"firstName": "Clark", "lastName": "Kent", "address": {"streetAddress": "21 2nd Street", "city": "Metropolis"}}
-    Comment    Retrieve Mongodb Records With Desired Fields 
-    ${fields} =    Retrieve Mongodb Records With Desired Fields    ${MDBDB}    ${MDBColl}     {}   address.city    ${false}
+    Comment    Retrieve Mongodb Records With Desired Fields
+    ${fields} =    Retrieve Mongodb Records With Desired Fields    ${MDBDB}    ${MDBColl}    {}    address.city    ${false}
     Log    ${fields}
     Should Contain    ${fields}    city
     Should Contain    ${fields}    Metropolis
